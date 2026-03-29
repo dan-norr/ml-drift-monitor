@@ -1,0 +1,21 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir \
+    xgboost scikit-learn imbalanced-learn numpy pandas pyarrow \
+    evidently fastapi "uvicorn[standard]" pydantic pyyaml \
+    python-multipart pillow
+
+COPY config.yaml .
+COPY src/ ./src/
+COPY dashboard/assets/ ./dashboard/assets/
+COPY data/reference_data.parquet ./data/
+COPY metrics/ ./metrics/
+COPY reports/ ./reports/
+COPY model/ ./model/
+
+EXPOSE 8000
+
+CMD ["uvicorn", "src.infrastructure.api:app", "--host", "0.0.0.0", "--port", "8000"]

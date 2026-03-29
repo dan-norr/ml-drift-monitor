@@ -1,0 +1,66 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ml-drift-monitor"
+version = "1.0.0"
+description = "End-to-end MLOps drift monitoring for fraud detection — Norr"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "xgboost>=2.0",
+    "scikit-learn>=1.4",
+    "imbalanced-learn>=0.12",
+    "numpy>=1.26",
+    "pandas>=2.2",
+    "pyarrow>=16",
+    "evidently>=0.7",
+    "fastapi>=0.111",
+    "uvicorn[standard]>=0.29",
+    "pydantic>=2.7",
+    "streamlit>=1.35",
+    "plotly>=5.22",
+    "pillow>=10.0",
+    "pyyaml>=6.0",
+    "python-multipart>=0.0.9",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.2",
+    "pytest-cov>=5.0",
+    "ruff>=0.4",
+    "mypy>=1.10",
+]
+notebooks = [
+    "jupyter>=1.0",
+    "ipykernel>=6.29",
+    "matplotlib>=3.9",
+    "seaborn>=0.13",
+]
+
+[project.scripts]
+drift-train    = "src.train:main"
+drift-simulate = "src.simulate_drift:main"
+drift-monitor  = "src.monitor:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src", "dashboard"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.10"
+ignore_missing_imports = true
+strict = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=src --cov-report=term-missing"
